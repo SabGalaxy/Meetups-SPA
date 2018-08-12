@@ -1,133 +1,165 @@
 <template>
- <v-container>
-  <v-layout row>
-    <v-flex xs12 sm6 offset-sm3>
-     <h2 class="red--text">Create a new Meetup</h2>
-    </v-flex>
-  </v-layout>
-  <v-layout row>
-    <v-flex xs12>
-     <form @submit.prevent="onCreateMeetup">
-      <v-layout row>
-       <v-flex xs12 sm6 offset-sm3>
-          <v-text-field
-            label="Title"
-            placeholder="title"
-            id="title"
-            v-model="title"
-            required
-          ></v-text-field>
-       </v-flex>
-      </v-layout>
-      <v-layout row>
-       <v-flex xs12 sm6 offset-sm3>
-          <v-text-field
-            label="Location"
-            placeholder="location"
-            id="location"
-            v-model="location"
-            required
-          ></v-text-field>
-       </v-flex>
-      </v-layout>
-      <v-layout row>
-       <v-flex xs12 sm6 offset-sm3>
-          <v-text-field
-            label="Image URL"
-            placeholder="imageurl"
-            id="imageurl"
-            v-model="imageURL"
-            required
-          ></v-text-field>
-       </v-flex>
-      </v-layout>
-      <v-layout row>
-       <v-flex xs12 sm6 offset-sm3>
-          <v-text-field
-            label="Description"
-            placeholder="decription"
-            id="description"
-            v-model="description"
-            multi-line
-            required
-          ></v-text-field>
-       </v-flex>
-      </v-layout>
-      <v-layout row>
-       <v-flex xs12 sm6 offset-sm3>
-          <img :src="imageURL" height="150px"> 
-       </v-flex>
-      </v-layout>
-    </v-flex>
-  </v-layout>
-  <v-layout row>
-    <v-flex xs12 sm6 offset-sm3>
-      <h4>Choose the Date</h4>
-    </v-flex>
-  </v-layout>
-  <v-layout row class="mb-2">
-    <v-flex xs12 sm6 offset-sm3>
-      <v-date-picker v-model="datepicker" color="green lighten-1"></v-date-picker>
-      <p>{{ datepicker }}</p>
-    </v-flex>
-  </v-layout>
-  <v-layout row>
-    <v-flex xs12 sm6 offset-sm3>
-      <v-time-picker v-model="timepicker" format="24hr"></v-time-picker>
-     <p>{{ timepicker }}</p>
-    </v-flex>
-  </v-layout>
-  <v-layout row>
-    <v-flex xs12 sm6 offset-sm3>
-     <v-btn class="red" :disabled="!formIsValid" type="submit">Create Meetup</v-btn>
-    </v-flex>
-  </v-layout>
-  </form>
-  </v-flex>
-  </v-layout>
- </v-container>
+  <v-container>
+    <v-layout row>
+      <v-flex xs12 sm6 offset-sm3>
+        <h4>Create a new Meetup</h4>
+      </v-flex>
+    </v-layout>
+    <v-layout row>
+      <v-flex xs12>
+        <form @submit.prevent="onCreateMeetup">
+          <v-layout row>
+            <v-flex xs12 sm6 offset-sm3>
+              <v-text-field
+                name="title"
+                label="Title"
+                id="title"
+                v-model="title"
+                required></v-text-field>
+            </v-flex>
+          </v-layout>
+          <v-layout row>
+            <v-flex xs12 sm6 offset-sm3>
+              <v-text-field
+                name="location"
+                label="Location"
+                id="location"
+                v-model="location"
+                required></v-text-field>
+            </v-flex>
+          </v-layout>
+          <v-layout row>
+            <v-flex xs12 sm6 offset-sm3>
+              <v-btn raised class="primary" @click="onPickFile">Upload Image</v-btn>
+              <input type="file" 
+                     style="display: none" 
+                     ref="fileInput" 
+                     accept="image/*"
+                     @change="onFilePicked">
+              <!--<v-text-field
+                name="imageUrl"
+                label="Image URL"
+                id="image-url"
+                v-model="imageUrl"
+                required></v-text-field>-->
+            </v-flex>
+          </v-layout>
+          <v-layout row>
+            <v-flex xs12 sm6 offset-sm3>
+              <img :src="imageUrl" height="150">
+            </v-flex>
+          </v-layout>
+          <v-layout row>
+            <v-flex xs12 sm6 offset-sm3>
+              <v-text-field
+                name="description"
+                label="Description"
+                id="description"
+                multi-line
+                v-model="description"
+                required></v-text-field>
+            </v-flex>
+          </v-layout>
+          <v-layout row>
+            <v-flex xs12 sm6 offset-sm3>
+              <h4>Choose a Data & Time</h4>
+            </v-flex>
+          </v-layout>
+          <v-layout row class="mb-2">
+            <v-flex xs12 sm6 offset-sm3>
+              <v-date-picker v-model="date"></v-date-picker>
+            </v-flex>
+          </v-layout>
+          <v-layout row>
+            <v-flex xs12 sm6 offset-sm3>
+              <v-time-picker v-model="time" format="24hr"></v-time-picker>
+            </v-flex>
+          </v-layout>
+          <v-layout row>
+            <v-flex xs12 sm6 offset-sm3>
+              <v-btn
+                class="primary"
+                :disabled="!formIsValid"
+                type="submit">Create Meetup</v-btn>
+            </v-flex>
+          </v-layout>
+        </form>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      title: "",
-      location: "",
-      imageURL: "",
-      description: "",
-      datepicker: null,
-      timepicker: null
-    };
-  },
-  computed: {
-    formIsValid() {
-      return (
-        this.title !== "" &&
-        this.location !== "" &&
-        this.imageURL !== "" &&
-        this.description !== ""
-      );
-    }
-  },
-  methods: {
-    onCreateMeetup() {
-      if (!this.formIsValid) {
-        return;
+  export default {
+    data () {
+      return {
+        title: '',
+        location: '',
+        imageUrl: '',
+        description: '',
+        date: null,
+        time: null,
+        image: null
       }
-      const meetupData = {
-        title: this.title,
-        location: this.location,
-        imageURL: this.imageURL,
-        description: this.description,
-        date: this.datepicker + " " + this.timepicker
-      };
-      alert("Send method!");
-      console.log(this.title);
-      this.$store.dispatch("createMeetup", meetupData);
-      this.router.push("/meetups");
+    },
+    computed: {
+      formIsValid () {
+        return this.title !== '' &&
+          this.location !== '' &&
+          this.imageUrl !== '' &&
+          this.description !== ''
+      },
+      /*submittableDateTime () {
+        const date = new Date(this.date)
+        if (typeof this.time === 'string') {
+          let hours = this.time.match(/^(\d+)/)[1]
+          const minutes = this.time.match(/:(\d+)/)[1]
+          date.setHours(hours)
+          date.setMinutes(minutes)
+        } else {
+          date.setHours(this.time.getHours())
+          date.setMinutes(this.time.getMinutes())
+        }
+        return date
+      }*/
+    },
+    methods: {
+      onCreateMeetup () {
+        if (!this.formIsValid) {
+          return
+        }
+        if(!this.image) {
+          return
+        }
+        const meetupData = {
+          title: this.title,
+          location: this.location,
+          imageUrl: this.imageUrl,
+          image: this.image,
+          description: this.description,
+          //date: this.submittableDateTime
+          date: this.date + ' '+ this.time
+        }
+        this.$store.dispatch('createMeetup', meetupData)
+        this.$router.push('/meetups')
+      },
+      onPickFile () {
+        this.$refs.fileInput.click()
+      },
+      onFilePicked (event) {
+        const files = event.target.files
+        let filename = files[0].name
+        if(filename.lastIndexOf('.') <= 0) {
+          return alert('Please add a valid image file')
+        }
+        const fileReader = new FileReader()
+        fileReader.addEventListener('load', () => {
+          this.imageUrl = fileReader.result
+          //console.log(this.imageUrl)
+        })
+        fileReader.readAsDataURL(files[0])
+        this.image = files[0]
+      }
     }
   }
-};
 </script>
-

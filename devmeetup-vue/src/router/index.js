@@ -7,6 +7,7 @@ import CreateMeetUps from '@/components/MeetUp/CreateMeetUps'
 import Profile from '@/components/User/Profile'
 import Signin from '@/components/User/Signin'
 import Signup from '@/components/User/Signup'
+import AuthGaurd from './auth-gaurd'
 
 Vue.use(Router)
 
@@ -26,17 +27,20 @@ export default new Router({
     {
       path: '/meetup/:id',
       name: 'Meetup',
+      props: true,
       component: Meetup
     },
     {
       path: '/createmeetups',
       name: 'CreateMeetups',
-      component: CreateMeetUps
+      component: CreateMeetUps,
+      beforeEnter: AuthGaurd
     },
     {
       path: '/profile',
       name: 'Profile',
-      component: Profile
+      component: Profile,
+      beforeEnter: AuthGaurd
     },
     {
       path: '/signin',

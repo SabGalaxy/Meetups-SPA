@@ -13,11 +13,11 @@
          <v-card-title primary-title>
           <div>
            <h3 class="white--text" mb0>{{ meetup.title }}</h3>
-            <div>{{ meetup.date }}</div>
+            <div>{{ meetup.date | date }}</div>
           </div>
          </v-card-title>
           <v-card-actions>
-           <v-btn flat to="/meetup/1">
+           <v-btn flat :to="'/meetup/'+meetup.id">
             <v-icon left light>arrow_forward</v-icon>
               View Meetups
            </v-btn>
@@ -37,7 +37,7 @@ export default {
  computed: {
   meetups () {
     //return this.$store.state.meetUps
-    return this.$store.getters.featuredMeetups
+    return this.$store.getters.loadedMeetups
     }
  }
 }
